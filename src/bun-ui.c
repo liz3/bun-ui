@@ -136,7 +136,6 @@ Vec2f normalize(UiInstance* instance, Vec2f in) {
 
 
 uint8_t move_buffer_to_image(UiInstance* target, uint8_t* buffer, uint32_t w, uint32_t h) {
-  printf("called %d %d\n", w, h);
   const uint8_t pixel_size = target->render_buffer.type == RGBA ? 4 : 3;
   image_buffer_resize(&(target->render_buffer), w,h);
   memcpy((&target->render_buffer)->buffer, buffer, w*h*pixel_size);

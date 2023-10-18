@@ -1,6 +1,9 @@
 # BUN UI
 This is a proof of concept binding between bun and glfw for rendering RGB or RGBA buffers into simple windows.
 
+<img width="962" alt="image" src="https://github.com/liz3/bun-ui/assets/21298625/04d430de-2466-4df8-bc41-61c98d08cc6e">
+
+
 ## Explanation
 This uses bun FFI api to create GLFW windows using a RGBA shader which can render buffers from a cpu, this is not to provide a graphics api but the interface to render them onto the screen
 with a simple api. See lib/index.mjs

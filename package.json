@@ -1,0 +1,24 @@
+{
+  "name": "bun-ui",
+  "version": "1.0.0",
+  "description": "A binding between bun and glfw",
+  "main": "./lib/index.mjs",
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "git submodule update --init && mkdir -p build && cd build && cmake .. && make"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liz3/bun-ui.git"
+  },
+  "author": "Liz3",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liz3/bun-ui/issues"
+  },
+  "homepage": "https://github.com/liz3/bun-ui#readme"
+}
