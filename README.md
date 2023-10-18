@@ -8,6 +8,9 @@ This is a proof of concept binding between bun and glfw for rendering RGB or RGB
 This uses bun FFI api to create GLFW windows using a RGBA shader which can render buffers from a cpu, this is not to provide a graphics api but the interface to render them onto the screen
 with a simple api. See lib/index.mjs
 
+## Installation
+Add this as a git based dependency.
+
 ## Building
 You need CMake and a compiler which can compile C11.
 Then building is pretty easy.
