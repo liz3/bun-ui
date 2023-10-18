@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "git submodule update --init && mkdir -p build && cd build && cmake .. && make"
+    "postinstall": "git submodule update --init && mkdir -p build && cd build && cmake .. && make"
   },
   "repository": {
     "type": "git",
