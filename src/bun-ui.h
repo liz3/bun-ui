@@ -98,6 +98,8 @@ GLint get_type_enum(Image* in, uint8_t type);
 
 uint8_t string_match(const char* lhs, const char* rhs);
 
+uint8_t set_clear_color(UiInstance* instance, uint8_t r, uint8_t g, uint8_t b);
+
 uint8_t set_buffer_color_type(UiInstance* instance, const char* type);
 
 uint8_t move_buffer_to_image(UiInstance* target, uint8_t* buffer, uint32_t w, uint32_t h);

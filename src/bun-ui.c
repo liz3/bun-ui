@@ -68,6 +68,12 @@ UiInstance* create_window(char* window_title, size_t buffer_w, size_t buffer_h, 
   return instance;
 }
 
+uint8_t set_clear_color(UiInstance* instance, uint8_t r, uint8_t g, uint8_t b) {
+
+  RgbaColor clear_color = {.r = r, .g = g,.b = b, .a = 255};
+  instance->clear_color = clear_color;
+}
+
 uint8_t render_window(UiInstance* instance) {
 
   glfwMakeContextCurrent(instance->window);
@@ -75,7 +81,7 @@ uint8_t render_window(UiInstance* instance) {
   glViewport(0, 0, instance->window_width, instance->window_height);
   shader_set2f(instance->shader, "resolution", (float)instance->window_width, (float)instance->window_height);
   RgbaColor clear_color = instance->clear_color;
-  glClearColor(clear_color.r / 255, clear_color.g / 255, clear_color.b /255, clear_color.a / 255);
+  glClearColor((float)clear_color.r / 255, (float)clear_color.g / 255, (float)clear_color.b /255, (float)clear_color.a / 255);
   glClear(GL_COLOR_BUFFER_BIT);
   move_image_buffer_to_texture(&(instance->render_buffer));
   Vec2f window_size = {instance->window_width, instance->window_height};
