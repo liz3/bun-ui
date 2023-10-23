@@ -37,7 +37,8 @@ typedef struct {
 
 enum ImageType {
     RGBA,
-    RGB
+    RGB,
+    BGRA
 };
 typedef struct {
     uint32_t w,h;
@@ -91,7 +92,13 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
 uint8_t update_title(UiInstance* instance, const char* new_title);
 
-uint8_t set_buffer_color_type(UiInstance* instance, uint8_t type);
+uint8_t get_buffer_pixel_size(Image* in);
+
+GLint get_type_enum(Image* in, uint8_t type);
+
+uint8_t string_match(const char* lhs, const char* rhs);
+
+uint8_t set_buffer_color_type(UiInstance* instance, const char* type);
 
 uint8_t move_buffer_to_image(UiInstance* target, uint8_t* buffer, uint32_t w, uint32_t h);
 

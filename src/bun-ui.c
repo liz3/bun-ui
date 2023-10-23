@@ -136,13 +136,13 @@ Vec2f normalize(UiInstance* instance, Vec2f in) {
 
 
 uint8_t move_buffer_to_image(UiInstance* target, uint8_t* buffer, uint32_t w, uint32_t h) {
-  const uint8_t pixel_size = target->render_buffer.type == RGBA ? 4 : 3;
+  const uint8_t pixel_size = get_buffer_pixel_size(&target->render_buffer);
   image_buffer_resize(&(target->render_buffer), w,h);
   memcpy((&target->render_buffer)->buffer, buffer, w*h*pixel_size);
   return 0;
 }
 void image_buffer_resize(Image* image, uint32_t w, uint32_t h) {
-  const uint8_t pixel_size = image->type == RGBA ? 4 : 3;
+  const uint8_t pixel_size = get_buffer_pixel_size(image);
   if(image->buffer) {
     if(image->buffer_size == w * h * pixel_size && w == image->w && h == image->h)
       return;
@@ -155,7 +155,11 @@ void image_buffer_resize(Image* image, uint32_t w, uint32_t h) {
   image->w = w;
   image->h = h;
 }
-
+uint8_t get_buffer_pixel_size(Image* in) {
+  if(in->type == RGB)
+    return 3;
+  return 4;
+}
 void allocate_texture(Image* image) {
   if(image->texture_was_allocated) {
      glDeleteTextures(1, &(image->texture_id));
@@ -175,8 +179,9 @@ void move_image_buffer_to_texture(Image* buffer) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  GLint color_t = buffer->type == RGBA ? GL_RGBA : GL_RGB;
-  glTexImage2D(GL_TEXTURE_2D, 0, buffer->type == RGBA ? GL_RGBA8 : GL_RGB8, (GLsizei)buffer->w,
+  GLint color_t = get_type_enum(buffer, 0);
+  GLint p_type = get_type_enum(buffer, 1);
+  glTexImage2D(GL_TEXTURE_2D, 0, p_type, (GLsizei)buffer->w,
                (GLsizei)buffer->h, 0, color_t, GL_UNSIGNED_BYTE, NULL);
   glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, buffer->w, buffer->h, color_t,
                   GL_UNSIGNED_BYTE, buffer->buffer);
@@ -184,14 +189,50 @@ void move_image_buffer_to_texture(Image* buffer) {
 
 }
 
-uint8_t set_buffer_color_type(UiInstance* instance, uint8_t type) {
-  Image* render_buffer = &instance->render_buffer;
-  render_buffer->type = (enum ImageType)type;
+GLint get_type_enum(Image* in, uint8_t type) {
+  if(in->type == RGB) {
+    return type == 1 ? GL_RGB8 : GL_RGB;
+  }
+  if(in->type == RGBA) {
+    return type == 1 ? GL_RGBA8 : GL_RGBA;
+  }
+    if(in->type == BGRA) {
+    return type == 1 ? GL_RGBA8 : GL_BGRA;
+  }
   return 0;
+}
+
+uint8_t set_buffer_color_type(UiInstance* instance, const char* type) {
+  Image* render_buffer = &instance->render_buffer;
+  if(string_match(type, "rgb")) {
+    render_buffer->type = RGB;
+  } else if(string_match(type, "rgba")) {
+    render_buffer->type = RGBA;
+  } else if(string_match(type, "bgra")) {
+    render_buffer->type = BGRA;
+  }
+  return 0;
+}
+
+uint8_t string_match(const char* lhs, const char* rhs) {
+  size_t offset = 0;
+  while(1) {
+    if(lhs[offset] == '\0' && rhs[offset] == '\0')
+      break;
+    if(lhs[offset] == '\0' || rhs[offset] == '\0')
+      return 0;
+    if(lhs[offset] != rhs[offset])
+      return 0;
+    offset++;
+
+  }
+
+  return 1;
 }
 
 uint8_t update_title(UiInstance* instance, const char* new_title) {
   glfwSetWindowTitle(instance->window, new_title);
+  return 0;
 }
 
 void shader_use(Shader* shader) {
