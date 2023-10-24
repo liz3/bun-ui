@@ -55,10 +55,11 @@ UiInstance* create_window(char* window_title, size_t buffer_w, size_t buffer_h, 
       return NULL;
     } 
     loaded_glad = 1;
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   }
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   ShaderVar vars[2] = {{2, sizeof(SimpleShaderEntry), GL_FLOAT, (void*)offsetof(SimpleShaderEntry, pos)},
       {2, sizeof(SimpleShaderEntry), GL_FLOAT, (void*)offsetof(SimpleShaderEntry, size)}};
   instance->shader = create_shader(IMAGE_SHADER_VERT, IMAGE_SHADER_FRAG, 16, vars, 2);
