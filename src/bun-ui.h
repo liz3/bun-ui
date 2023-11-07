@@ -84,13 +84,41 @@ typedef struct {
     uint8_t should_center;
     Shader* shader;
     void* close_callback;
+    void* key_callback;
+    void* text_callback;
+    void* list_entry;
 } UiInstance;
 
- typedef uint8_t close_callback(UiInstance*);
+typedef struct ListEntry_t {
+    GLFWwindow* window;
+    UiInstance* instance;
+    struct ListEntry_t* prev;
+    struct ListEntry_t* next;
+} ListEntry;
+
+typedef struct List {
+    size_t size;
+    ListEntry* head;
+    ListEntry* tail;
+} List;
+
+typedef uint8_t close_callback(UiInstance*);
+typedef uint8_t key_cb_t(UiInstance*, int key, int scancode, int action, int mods);
+typedef uint8_t text_cb_t(UiInstance*, uint32_t cp);
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+void character_callback(GLFWwindow* window, unsigned int codepoint);
+
 uint8_t update_title(UiInstance* instance, const char* new_title);
+
+ListEntry* list_append(List* list, UiInstance* instance);
+
+void list_remove(List* list, ListEntry* entry);
+
+ListEntry* list_find_window(List* list, GLFWwindow* window);
 
 uint8_t get_buffer_pixel_size(Image* in);
 
@@ -101,6 +129,9 @@ uint8_t string_match(const char* lhs, const char* rhs);
 uint8_t set_clear_color(UiInstance* instance, uint8_t r, uint8_t g, uint8_t b);
 
 uint8_t set_buffer_color_type(UiInstance* instance, const char* type);
+
+uint8_t set_keyboard_callback(UiInstance* instance, void* callback);
+uint8_t set_text_callback(UiInstance* instance, void* callback);
 
 uint8_t move_buffer_to_image(UiInstance* target, uint8_t* buffer, uint32_t w, uint32_t h);
 

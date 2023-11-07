@@ -6,10 +6,14 @@
 
 size_t g_init = 0;
 size_t loaded_glad = 0;
+List g_list;
 
 int init() {
   if(g_init == 1)
     return 0;
+  g_list.size = 0;
+  g_list.head = NULL;
+  g_list.tail = NULL;
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -65,6 +69,7 @@ UiInstance* create_window(char* window_title, size_t buffer_w, size_t buffer_h, 
   instance->shader = create_shader(IMAGE_SHADER_VERT, IMAGE_SHADER_FRAG, 16, vars, 2);
   image_buffer_resize(&(instance->render_buffer), buffer_w, buffer_h);
   allocate_texture(&(instance->render_buffer));
+  instance->list_entry =list_append(&g_list, instance);
   glfwPollEvents();
   return instance;
 }
@@ -124,6 +129,8 @@ uint8_t render_window(UiInstance* instance) {
 }
 
 uint8_t dispose_instance(UiInstance* instance) {
+  list_remove(&g_list, (ListEntry*)instance->list_entry);
+  instance->list_entry = NULL;
   glfwDestroyWindow(instance->window);
   if(instance->render_buffer.texture_was_allocated)
       glDeleteTextures(1, &(instance->render_buffer.texture_id));
@@ -135,8 +142,37 @@ uint8_t dispose_instance(UiInstance* instance) {
   free(instance);
   return 0;
 }
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    ListEntry* entry = list_find_window(&g_list, window);
+    if(entry == NULL)
+      return;
+    if(entry->instance->key_callback == NULL)
+      return;
+    UiInstance* instance = entry->instance;
+      ((key_cb_t*)instance->key_callback)(instance, key, scancode, action, mods);
+}
+void character_callback(GLFWwindow* window, unsigned int codepoint)
+{
+    ListEntry* entry = list_find_window(&g_list, window);
+    if(entry == NULL)
+      return;
+    if(entry->instance->text_callback == NULL)
+      return;
+    UiInstance* instance = entry->instance;
+      ((text_cb_t*)instance->text_callback)(instance, codepoint);
+}
 
-
+uint8_t set_keyboard_callback(UiInstance* instance, void* callback) {
+  instance->key_callback = callback;
+  glfwSetKeyCallback(instance->window, key_callback);
+  return 0;
+}
+uint8_t set_text_callback(UiInstance* instance, void* callback) {
+  instance->text_callback = callback;
+  glfwSetCharCallback(instance->window, character_callback);
+  return 0;
+}
 Vec2f normalize(UiInstance* instance, Vec2f in) {
  Vec2f a = {.x = in.x - ((float)instance->window_width / 2), .y = in.y - ((float)instance->window_height/2)};
  return a;
@@ -300,4 +336,55 @@ Shader* create_shader(const char* vertex_content, const char* fragment_content, 
   shader->fragment_shader_id = fragment_shader;
 
   return shader;
+}
+
+ListEntry* list_append(List* list, UiInstance* instance) {
+  ListEntry* entry = malloc(sizeof(ListEntry));
+  entry->prev = NULL;
+  entry->next = NULL;
+  entry->window = instance->window;
+  entry->instance = instance;
+  if(list->head == NULL) {
+    list->head = entry;
+    list->tail = entry;
+  } else {
+    ListEntry* prev_tail = list->tail;
+    prev_tail->next = entry;
+    entry->prev = prev_tail;
+    list->tail = entry;
+  }
+  list->size++;
+
+  return entry;
+}
+void list_remove(List* list, ListEntry* entry) {
+  if(list->size == 1) {
+    list->size = 0;
+    list->head = NULL;
+    list->tail = NULL;
+  } else {
+    ListEntry* prev = entry->prev;
+    ListEntry* next = entry->next;
+    if(prev != NULL && entry == list->tail){
+      list->tail = prev;
+      prev->next = NULL;
+    } else if(next != NULL && entry == list->head){
+      list->head = next;
+      next->prev = NULL;
+    } else if(prev != NULL && next != NULL) {
+        next->prev = prev;
+        prev->next = next;
+    }
+    list->size--;
+  }
+  free(entry);
+}
+ListEntry* list_find_window(List* list, GLFWwindow* window) {
+  ListEntry* p = list->head;
+  while(p != NULL){
+    if(p->window == window)
+      return p;
+    p = p->next;
+  }
+  return NULL;
 }
