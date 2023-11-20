@@ -47,6 +47,7 @@ UiInstance* create_window(char* window_title, size_t buffer_w, size_t buffer_h, 
   RgbaColor clear_color = {.r = 80, .g = 80,.b = 80, .a = 255};
   instance->clear_color = clear_color;
   instance->render_buffer.type = RGBA;
+  instance->is_managed = 1;
 
   instance->window = glfwCreateWindow(window_width, window_height, window_title, NULL, NULL);
   glfwMakeContextCurrent(instance->window);
@@ -121,7 +122,8 @@ uint8_t render_window(UiInstance* instance) {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 6, 1);
   glfwSwapBuffers(instance->window);
-  glfwPollEvents();
+  if(instance->is_managed)
+    glfwPollEvents();
   if(glfwWindowShouldClose(instance->window)) {
     ((close_callback*)instance->close_callback)(instance);
   }
@@ -196,6 +198,10 @@ uint8_t set_window_focus_callback(UiInstance* instance, void* callback) {
   return 0;
 }
 
+uint8_t set_is_managed(UiInstance* instance, uint8_t is_managed) {
+  instance->is_managed = is_managed;
+  return 0;
+}
 Vec2f normalize(UiInstance* instance, Vec2f in) {
  Vec2f a = {.x = in.x - ((float)instance->window_width / 2), .y = in.y - ((float)instance->window_height/2)};
  return a;
