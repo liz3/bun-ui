@@ -178,6 +178,9 @@ uint8_t set_text_callback(UiInstance* instance, void* callback) {
 uint8_t set_framebuffer_callback(UiInstance* instance, void* callback) {
   instance->framebuffer_size_callback = callback;
   glfwSetFramebufferSizeCallback(instance->window, framebuffer_size_callback); 
+  float xscale, yscale;
+  glfwGetWindowContentScale(instance->window, &xscale, &yscale);
+  ((framebuffer_cb_t*)instance->framebuffer_size_callback)(instance, instance->window_width, instance->window_height, xscale, yscale);
   return 0;
 }
 uint8_t set_mouse_position_callback(UiInstance* instance, void* callback) {
