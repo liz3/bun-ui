@@ -86,6 +86,10 @@ typedef struct {
     void* close_callback;
     void* key_callback;
     void* text_callback;
+    void* framebuffer_size_callback;
+    void* mouse_position_callback;
+    void* mouse_button_callback;
+    void* window_focus_callback;
     void* list_entry;
 } UiInstance;
 
@@ -103,10 +107,17 @@ typedef struct List {
 } List;
 
 typedef uint8_t close_callback(UiInstance*);
-typedef uint8_t key_cb_t(UiInstance*, int key, int scancode, int action, int mods);
+typedef uint8_t key_cb_t(UiInstance*, int32_t key, int32_t scancode, int32_t action, int32_t mods);
 typedef uint8_t text_cb_t(UiInstance*, uint32_t cp);
+typedef uint8_t framebuffer_cb_t(UiInstance*, int32_t w, int32_t h);
+typedef uint8_t mouse_position_cb_t(UiInstance*, double x, double y);
+typedef uint8_t mouse_button_callback_t(UiInstance*, int32_t button, int32_t action, int32_t mods);
+typedef uint8_t window_focus_callback_t(UiInstance*, int32_t focused);
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+void window_focus_callback(GLFWwindow* window, int focused);
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
@@ -132,6 +143,12 @@ uint8_t set_buffer_color_type(UiInstance* instance, const char* type);
 
 uint8_t set_keyboard_callback(UiInstance* instance, void* callback);
 uint8_t set_text_callback(UiInstance* instance, void* callback);
+uint8_t set_framebuffer_callback(UiInstance* instance, void* callback);
+uint8_t set_mouse_position_callback(UiInstance* instance, void* callback);
+uint8_t set_mouse_button_callback(UiInstance* instance, void* callback);
+uint8_t set_window_focus_callback(UiInstance* instance, void* callback);
+uint8_t await_events(UiInstance* instance);
+uint8_t await_events_timeout(UiInstance* instance, double max);
 
 uint8_t move_buffer_to_image(UiInstance* target, uint8_t* buffer, uint32_t w, uint32_t h);
 

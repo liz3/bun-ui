@@ -173,6 +173,29 @@ uint8_t set_text_callback(UiInstance* instance, void* callback) {
   glfwSetCharCallback(instance->window, character_callback);
   return 0;
 }
+uint8_t set_framebuffer_callback(UiInstance* instance, void* callback) {
+  instance->framebuffer_size_callback = callback;
+  glfwSetFramebufferSizeCallback(instance->window, framebuffer_size_callback); 
+  return 0;
+}
+uint8_t set_mouse_position_callback(UiInstance* instance, void* callback) {
+  instance->mouse_position_callback = callback;
+  glfwSetCursorPosCallback(instance->window, cursor_position_callback); 
+  return 0;
+}
+
+uint8_t set_mouse_button_callback(UiInstance* instance, void* callback) {
+  instance->mouse_button_callback = callback;
+  glfwSetMouseButtonCallback(instance->window, mouse_button_callback); 
+  return 0;
+}
+
+uint8_t set_window_focus_callback(UiInstance* instance, void* callback) {
+  instance->window_focus_callback = callback;
+  glfwSetWindowFocusCallback(instance->window, window_focus_callback);  
+  return 0;
+}
+
 Vec2f normalize(UiInstance* instance, Vec2f in) {
  Vec2f a = {.x = in.x - ((float)instance->window_width / 2), .y = in.y - ((float)instance->window_height/2)};
  return a;
@@ -278,6 +301,15 @@ uint8_t update_title(UiInstance* instance, const char* new_title) {
   glfwSetWindowTitle(instance->window, new_title);
   return 0;
 }
+uint8_t await_events(UiInstance* instance) {
+  glfwWaitEvents();
+  return 0;
+}
+
+uint8_t await_events_timeout(UiInstance* instance, double max) {
+  glfwWaitEventsTimeout(max);
+  return 0;
+}
 
 void shader_use(Shader* shader) {
  glUseProgram(shader->pid);
@@ -286,15 +318,48 @@ void shader_use(Shader* shader) {
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-  // if(active_instance && window == active_instance->window) {
-  //   active_instance->window_width = width;
-  //   active_instance->window_height = height;
-  //    glViewport(0, 0, width, height);
-  // } else {
-  //   printf("missmatch\n");
-  // }
+    ListEntry* entry = list_find_window(&g_list, window);
+    if(entry == NULL)
+      return;
+    if(entry->instance->framebuffer_size_callback == NULL)
+      return;
+
+    UiInstance* instance = entry->instance;
+    ((framebuffer_cb_t*)instance->framebuffer_size_callback)(instance, width, height);
 }
 
+void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    ListEntry* entry = list_find_window(&g_list, window);
+    if(entry == NULL)
+      return;
+    if(entry->instance->mouse_position_callback == NULL)
+      return;
+
+    UiInstance* instance = entry->instance;
+    ((mouse_position_cb_t*)instance->mouse_position_callback)(instance, xpos, ypos);
+}
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    ListEntry* entry = list_find_window(&g_list, window);
+    if(entry == NULL)
+      return;
+    if(entry->instance->mouse_button_callback == NULL)
+      return;
+
+    UiInstance* instance = entry->instance;
+    ((mouse_button_callback_t*)instance->mouse_button_callback)(instance, button, action, mods);
+}
+void window_focus_callback(GLFWwindow* window, int focused) {
+    ListEntry* entry = list_find_window(&g_list, window);
+    if(entry == NULL)
+      return;
+    if(entry->instance->window_focus_callback == NULL)
+      return;
+
+    UiInstance* instance = entry->instance;
+    ((window_focus_callback_t*)instance->window_focus_callback)(instance, focused);
+}
 void shader_set2f(Shader* shader, const char* name, float x, float y) {
    glUniform2f(glGetUniformLocation(shader->pid, name), x, y);
 }
