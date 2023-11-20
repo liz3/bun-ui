@@ -110,7 +110,7 @@ typedef struct List {
 typedef uint8_t close_callback(UiInstance*);
 typedef uint8_t key_cb_t(UiInstance*, int32_t key, int32_t scancode, int32_t action, int32_t mods);
 typedef uint8_t text_cb_t(UiInstance*, uint32_t cp);
-typedef uint8_t framebuffer_cb_t(UiInstance*, int32_t w, int32_t h);
+typedef uint8_t framebuffer_cb_t(UiInstance*, int32_t w, int32_t h, float x_scale, float y_scale);
 typedef uint8_t mouse_position_cb_t(UiInstance*, double x, double y);
 typedef uint8_t mouse_button_callback_t(UiInstance*, int32_t button, int32_t action, int32_t mods);
 typedef uint8_t window_focus_callback_t(UiInstance*, int32_t focused);

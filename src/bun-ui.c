@@ -329,9 +329,11 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
       return;
     if(entry->instance->framebuffer_size_callback == NULL)
       return;
-
     UiInstance* instance = entry->instance;
-    ((framebuffer_cb_t*)instance->framebuffer_size_callback)(instance, width, height);
+
+    float xscale, yscale;
+    glfwGetWindowContentScale(instance->window, &xscale, &yscale);
+    ((framebuffer_cb_t*)instance->framebuffer_size_callback)(instance, width, height, xscale, yscale);
 }
 
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
