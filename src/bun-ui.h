@@ -151,6 +151,8 @@ uint8_t set_window_focus_callback(UiInstance* instance, void* callback);
 uint8_t await_events(UiInstance* instance);
 uint8_t await_events_timeout(UiInstance* instance, double max);
 uint8_t set_is_managed(UiInstance* instance, uint8_t is_managed);
+uint8_t set_clipboard(UiInstance* instance, const char* d);
+const char* get_clipboard(UiInstance* instance);
 
 uint8_t move_buffer_to_image(UiInstance* target, uint8_t* buffer, uint32_t w, uint32_t h);
 

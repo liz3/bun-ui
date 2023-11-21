@@ -205,6 +205,14 @@ uint8_t set_is_managed(UiInstance* instance, uint8_t is_managed) {
   instance->is_managed = is_managed;
   return 0;
 }
+
+uint8_t set_clipboard(UiInstance* instance, const char* d) {
+  glfwSetClipboardString(instance->window, d);
+  return 0;
+}
+const char* get_clipboard(UiInstance* instance) {
+  return glfwGetClipboardString(instance->window);
+}
 Vec2f normalize(UiInstance* instance, Vec2f in) {
  Vec2f a = {.x = in.x - ((float)instance->window_width / 2), .y = in.y - ((float)instance->window_height/2)};
  return a;
