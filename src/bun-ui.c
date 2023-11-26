@@ -101,7 +101,7 @@ uint8_t render_window(UiInstance *instance) {
   move_image_buffer_to_texture(&(instance->render_buffer));
   Vec2f window_size = {instance->window_width, instance->window_height};
   float t = window_size.x;
-  if (window_size.y > window_size.x)
+  if (window_size.y < window_size.x)
     t = window_size.y;
   if (instance->render_buffer.h > instance->render_buffer.w) {
     float scale = t / instance->render_buffer.h;
