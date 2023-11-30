@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "mkdir -p build_bun && cd build_bun && cmake .. && make",
+    "install": "mkdir -p build && cd build && cmake .. && make",
     "build-node": "cmake-js build"
   },
   "repository": {
