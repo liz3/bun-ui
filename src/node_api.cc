@@ -460,6 +460,8 @@ static Napi::Object Init(Napi::Env env, Napi::Object exports) {
               Napi::Function::New(env, SetIsManaged));
   exports.Set(Napi::String::New(env, "get_clipboard"),
               Napi::Function::New(env, GetClipboard));
+  exports.Set(Napi::String::New(env, "set_clipboard"),
+              Napi::Function::New(env, SetClipboard));
   return exports;
 }
 
