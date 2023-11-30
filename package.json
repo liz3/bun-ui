@@ -25,9 +25,7 @@
   "dependencies": {
     "bindings": "^1.5.0",
     "canvas": "github:Automattic/node-canvas",
-    "node-addon-api": "^7.0.0"
-  },
-  "devDependencies": {
+    "node-addon-api": "^7.0.0",
     "cmake-js": "^7.2.1"
   }
 }
