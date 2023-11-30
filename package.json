@@ -10,7 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "mkdir -p build && cd build && cmake .. && make",
-    "build-node": "cmake-js build"
+    "build-node": "rm -rf build && cmake-js build"
   },
   "repository": {
     "type": "git",
