@@ -8,7 +8,7 @@ size_t g_init = 0;
 size_t loaded_glad = 0;
 List g_list;
 
-int init() {
+int bun_ui_init() {
   if (g_init == 1)
     return 0;
   g_list.size = 0;
@@ -39,7 +39,7 @@ GLuint simple_compile_shader(GLuint type, const char *content) {
 UiInstance *create_window(char *window_title, size_t buffer_w, size_t buffer_h,
                           size_t window_width, size_t window_height,
                           void *close_callback) {
-  if (init())
+  if (bun_ui_init())
     return NULL;
   UiInstance *instance = calloc(1, sizeof(UiInstance));
   instance->close_callback = close_callback;

@@ -1,7 +1,7 @@
 {
   "name": "bun-ui",
   "version": "1.0.0",
-  "description": "A binding between bun and glfw",
+  "description": "a binding layer to GLFW and a plotting library",
   "main": "./lib/index.mjs",
   "directories": {
     "example": "examples",
@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "mkdir -p build && cd build && cmake .. && make"
+    "install": "mkdir -p build_bun && cd build_bun && cmake .. && make",
+    "build-node": "cmake-js build"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,11 @@
   },
   "homepage": "https://github.com/liz3/bun-ui#readme",
   "dependencies": {
-    "canvas": "github:Automattic/node-canvas"
+    "bindings": "^1.5.0",
+    "canvas": "github:Automattic/node-canvas",
+    "node-addon-api": "^7.0.0"
+  },
+  "devDependencies": {
+    "cmake-js": "^7.2.1"
   }
 }

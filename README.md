@@ -1,15 +1,26 @@
 # BUN UI
-This is a library for rendering graphs, plots and pie charts in javascript using [bun](https://bun.sh)
-
-It provides a high level api for generating graphs, plots and pies and optionally display them as window.
+This is a library which is a javascript glfw binding and a tool for rendering graphs, plots and pie charts in javascript using [bun](https://bun.sh) or [node](https://nodejs.org/en)(because bun fired me pretty disgustingly)
 
 
 ## Explanation
-This uses bun FFI api to create GLFW windows using a RGBA shader which can render buffers from a cpu, this is not to provide a graphics api but the interface to render them onto the screen
-with a simple api. See lib/index.mjs
+This uses bun or nodes FFI api to create GLFW windows using a RGBA shader which can render buffers from a cpu, it further provides a api for various interactions with the window and functions to render plots and the likes.
 
 ## Installation
 Add this as a git based dependency.
+
+### Node
+By default it only build the bun c library, to make it work for node cd into `node_modules/bun-ui` and run `npm run build-node`, which will build the required module,
+from there you can use the api normally.
+
+### Building Manually
+You need CMake and a compiler which can compile C11.
+Then building is pretty easy.
+```
+> mkdir build
+> cd build
+> cmake ..
+> make
+```
 
 ## API
 
@@ -81,6 +92,25 @@ await iterativeWindow(
     1,
 );
 ```
+
+### easyWindowWithBounds
+Easy wrapper for creating a single buffer window, `toWindow` uses this under the hood.
+```js
+import {easyWindowWithBounds} from "bun-ui";
+// easyWindowWithBounds: (name:string, buffer:Buffer, buffer_w: number, buffer_h: number, window_w: number, window_h: number, type: ?"rgb"|"rgba"|"bgra" = "rgba")
+const { canvas, w, h } = o;
+return easyWindowWithBounds(
+    name,
+    canvas.toBuffer("raw"),
+    w,
+    h,
+    w,
+    h,
+    "bgra",
+);
+
+```
+
 ### Window
 Window is the underlying class on which all apis build upon, it gives you very low level control.
 ```js
@@ -94,7 +124,16 @@ class Window {
     updateBuffer(buffer: Buffer, bufferWidth: number, bufferHeight: number, type: ?"rgb"|"rgba"|"bgra" = "rgba"): void;
     setKeyCallback(({key: number, scancode: number, action: number, mods: number}):void):void;
     setTextCallback((codepoint: number):void):void;
+    setMousePositionCallback((x: number, y:number):void):void
+    setMouseButtonCallback((button: number, action: number, mods: number):void):void
+    setFocusCallback((window_focused:boolean):void):void
+    setSizeCallback((width: number, height: number, xScale: number, yScale: number):void):void
     updateTitle(title:string):void;
+    getClipboard():string;
+    setClipboard(content: string): void;
+    dangerouslyAwaitEvents():void // this will call into glfw blocking the main thread since the ui is executed on the main js thread.
+    dangerouslyAwaitEventsTimeout(seconds: number):void // this will call into glfw blocking the main thread since the ui is executed on the main js thread.
+
     create():void;
 }
 */
@@ -123,24 +162,5 @@ window.setTextCallback(codepoint => {
 window.close();
 ```
 
-## Building
-You need CMake and a compiler which can compile C11.
-Then building is pretty easy.
-```
-> mkdir build
-> cd build
-> cmake ..
-> make
-```
-
-## Example of a single window
-```js
-import {easyWindow} from "bun-ui"
-
-const b = Buffer.alloc(400 * 400 * 4);
-for(let i = 0; i < b.length; i++) {
-    b[i] = 120;
-}
-await easyWindow("Test Window", b, 400, 400);
-``` 
-<img width="962" alt="image" src="https://github.com/liz3/bun-ui/assets/21298625/04d430de-2466-4df8-bc41-61c98d08cc6e">
+# License
+This is free software under GPL 2.0

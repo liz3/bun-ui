@@ -1,4 +1,5 @@
 build
+build_bun
 .DS_Store
 node_modules
 .cache

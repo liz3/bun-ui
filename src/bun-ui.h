@@ -4,6 +4,9 @@
 #include "glad.h"
 #include "la.h"
 #include <GLFW/glfw3.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define IMAGE_SHADER_VERT                                                      \
   "#version 330 core\n"                                                        \
@@ -172,7 +175,7 @@ void shader_set4f(Shader *shader, const char *name, float x, float y, float z,
                   float w);
 void shader_set1f(Shader *shader, const char *name, float v);
 
-int init();
+int bun_ui_init();
 
 void allocate_texture(Image *image);
 
@@ -187,5 +190,8 @@ UiInstance *create_window(char *window_title, size_t buffer_w, size_t buffer_h,
                           void *close_callback);
 
 uint8_t render_window(UiInstance *instance);
+#ifdef __cplusplus
+}
+#endif
 
 #endif
