@@ -99,28 +99,20 @@ uint8_t render_window(UiInstance *instance) {
                (float)clear_color.b / 255, (float)clear_color.a / 255);
   glClear(GL_COLOR_BUFFER_BIT);
   move_image_buffer_to_texture(&(instance->render_buffer));
-  Vec2f window_size = {instance->window_width, instance->window_height};
-  float t = window_size.x;
-  if (window_size.y < window_size.x)
-    t = window_size.y;
-  if (instance->render_buffer.h > instance->render_buffer.w) {
-    float scale = t / instance->render_buffer.h;
-    window_size.x = instance->render_buffer.w * scale;
-    window_size.y = instance->render_buffer.h * scale;
-  } else {
-    float scale = t / instance->render_buffer.w;
-    window_size.x = instance->render_buffer.w * scale;
-    window_size.y = instance->render_buffer.h * scale;
-  }
+  Vec2f window_size;
   Vec2f start_pos = {0, 0};
-  if (window_size.x < instance->window_width) {
-    size_t diff = instance->window_width - window_size.x;
-    start_pos.x += diff / 2;
-  }
+  float bufferAspectRatio = (float)instance->render_buffer.w / (float)instance->render_buffer.h;
+  float windowAspectRatio = (float)instance->window_width / (float)instance->window_height;
 
-  if (window_size.y < instance->window_height) {
-    size_t diff = instance->window_height - window_size.y;
-    start_pos.y += diff / 2;
+
+  if (bufferAspectRatio > windowAspectRatio) {
+    window_size.x = instance->window_width;
+    window_size.y = instance->window_width / bufferAspectRatio;
+    start_pos.y = (instance->window_height - window_size.y) / 2;
+  } else {
+    window_size.y = instance->window_height;
+    window_size.x = instance->window_height * bufferAspectRatio;
+    start_pos.x = (instance->window_width - window_size.x) / 2;
   }
   SimpleShaderEntry entry = {normalize(instance, start_pos), window_size};
   shader_use(instance->shader);
