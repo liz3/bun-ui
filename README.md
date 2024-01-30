@@ -62,6 +62,22 @@ import {toWindow, plot} from "bun-ui";
 const p = plot("Plot Title", [0.4, 0.2, 0.5, [0.1, "10%"]], [[0, "0"], [1, "100"]]);
 await toWindow("Window Title", p);
 ```
+### toPNG
+Export a render to a PNG and save it to the filesystem.
+```js
+import {toPNG, plot} from "bun-ui";
+// toPNG = (path:string, in: {canvas: Canvas}): Promise<void>
+const p = plot("Plot Title", [0.4, 0.2, 0.5, [0.1, "10%"]], [[0, "0"], [1, "100"]]);
+await toPNG("foo/bar/out.png", p);
+```
+### toJPEG
+Export a render to a JPEG and save it to the filesystem.
+```js
+import {toJPEG, plot} from "bun-ui";
+// toJPEG = (path:string, in: {canvas: Canvas}, quality: ?Number = 0.95): Promise<void>
+const p = plot("Plot Title", [0.4, 0.2, 0.5, [0.1, "10%"]], [[0, "0"], [1, "100"]]);
+await toJPEG("foo/bar/out.png", p);
+```
 ### iterativeWindow
 Display a window based on a render and a index, this is a "easy way" to update a exiting buffer of a window based on an index
 ```js
