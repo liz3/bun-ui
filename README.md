@@ -66,7 +66,7 @@ await toWindow("Window Title", p);
 Export a render to a PNG and save it to the filesystem.
 ```js
 import {toPNG, plot} from "bun-ui";
-// toPNG = (path:string, in: {canvas: Canvas}): Promise<void>
+// toPNG = (path:string, in: {canvas: Canvas}, background: ?string = "rgb(200, 200, 200)"): Promise<void>
 const p = plot("Plot Title", [0.4, 0.2, 0.5, [0.1, "10%"]], [[0, "0"], [1, "100"]]);
 await toPNG("foo/bar/out.png", p);
 ```
