@@ -34,7 +34,7 @@ const {canvas, w, h} = graph("Title", [[0.4, 0.2, 0.5, 0.1]], [[0, "0"], [1, "10
 Colors is rgb 0-255
 ```js
 import {plot} from "bun-ui";
-// plot = (name:string, bars: [number|[number, string]], markers: ?[][n:number, name: string], color: [number, number, number], options: ?{width: number, height: number}): {canvas:Canvas, w: number, h: number}
+// plot = (name:string, bars: [number|[number, string]], markers: ?[][n:number, name: string], color: [number, number, number], options: ?{width: number, height: number, spacing: number}): {canvas:Canvas, w: number, h: number}
 const {canvas, w, h} = plot("Title", [0.4, 0.2, 0.5, [0.1, "10%"]], [[0, "0"], [1, "100"]]);
 ```
 ### Pie
