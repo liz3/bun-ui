@@ -113,7 +113,7 @@ await iterativeWindow(
 Easy wrapper for creating a single buffer window, `toWindow` uses this under the hood.
 ```js
 import {easyWindowWithBounds} from "bun-ui";
-// easyWindowWithBounds: (name:string, buffer:Buffer, buffer_w: number, buffer_h: number, window_w: number, window_h: number, type: ?"rgb"|"rgba"|"bgra" = "rgba")
+// easyWindowWithBounds: (name:string, buffer:Buffer, buffer_w: number, buffer_h: number, window_w: number, window_h: number, type: ?"rgb"|"rgba"|"bgra" = "rgba", winCb: ?(Window)): Promise<void>
 const { canvas, w, h } = o;
 return easyWindowWithBounds(
     name,
