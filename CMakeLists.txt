@@ -1,4 +1,5 @@
 project(bun-ui)
+cmake_minimum_required(VERSION 3.6)
 
 if(CMAKE_JS_VERSION)
     set(CMAKE_CXX_STANDARD 17)
@@ -11,9 +12,11 @@ add_subdirectory(third-party/glfw)
 target_include_directories(bun-ui PRIVATE third-party/glfw/include)
 target_link_libraries(bun-ui PUBLIC glfw)
 if(CMAKE_JS_VERSION)
-    include_directories(${CMAKE_JS_INC})
     set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
-    target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB})
+    target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_JS_INC})
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_JS_LIB})
+    target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
+
 
     # Include Node-API wrappers
     execute_process(COMMAND node -p "require('node-addon-api').include"
@@ -24,6 +27,10 @@ if(CMAKE_JS_VERSION)
     string(REGEX REPLACE "[\r\n\"]" "" NODE_ADDON_API_DIR ${NODE_ADDON_API_DIR})
 
     target_include_directories(${PROJECT_NAME} PRIVATE ${NODE_ADDON_API_DIR})
+    if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)
+      # Generate node.lib
+      execute_process(COMMAND ${CMAKE_AR} /def:${CMAKE_JS_NODELIB_DEF} /out:${CMAKE_JS_NODELIB_TARGET} ${CMAKE_STATIC_LINKER_FLAGS})
+    endif()
 
     # define NAPI_VERSION
     add_definitions(-DNAPI_VERSION=3)

@@ -9,8 +9,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "mkdir -p build && cd build && cmake .. && make",
-    "build-node": "rm -rf build && cmake-js build"
+    "install": "node buildd.mjs mkbuild && cd build && cmake .. && node ../make.mjs",
+    "build-node": "node buildd.mjs delbuild && cmake-js build"
   },
   "repository": {
     "type": "git",
