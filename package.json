@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "node buildd.mjs mkbuild && cd build && cmake .. && node ../make.mjs",
+    "install": "node buildd.mjs mkbuild && cd build && cmake .. && node ../buildd.mjs",
     "build-node": "node buildd.mjs delbuild && cmake-js build"
   },
   "repository": {
